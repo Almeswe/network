@@ -2,3 +2,15 @@
 *.suo
 *.db
 *.ipch
+*.ilk
+*.exe
+*.opendb
+*.obj
+*.recipe
+*.log
+*.pdb
+*.tlog
+server/Debug/server.vcxproj.FileListAbsolute.txt
+*.db-wal
+*.db-shm
+*.idb
