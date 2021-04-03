@@ -9,8 +9,8 @@
 
 #pragma warning(disable : 4996)
 
-#define TCP_DATA_PACK 512 //? 
-#define DEFAULT_ANSI_PORT "27015" // in msdn
+#define TCP_DATA_PACK 512 
+#define DEFAULT_ANSI_PORT "27015" 
 
 using namespace std;
 

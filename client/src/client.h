@@ -26,13 +26,9 @@ namespace Network
 
 		SOCKET connectSocket;
 
-		sockaddr socketAddr;
-		sockaddr_in service;
-
 		addrinfo addresHints;
 		addrinfo* addressResult = NULL;
 
-		int serviceLen;
 		int receivedLen;
 		char buffer[TCP_DATA_PACK];
 
