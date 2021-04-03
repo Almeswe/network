@@ -25,22 +25,32 @@ namespace Network
 		WSADATA wsadata;
 
 		SOCKET serverSocket;
-		sockaddr socketAddr;
+		SOCKET clientSocket;
 
-		addrinfo addresHints = {0};
+		sockaddr socketAddr;
+		sockaddr_in service;
+
+		addrinfo addresHints;
 	    addrinfo* addressResult = NULL;
+
+		int serviceLen;
+		int receiveLen;
+		char buffer[TCP_DATA_PACK];
 
 	public:
 		Server();
 		~Server();
 
-	private:
+	public:
 		void Start();
+		void Close();
+
+	private:
 		void Bind();
-		void ReceiveData();
+		void Listen();
+		int SendDataTo();
+		int ReceiveData();
 		void ProcessData();
-		void SendDataTo();
-		void Stop();
 
 	private:
 		inline void ErrorLog(string msg, string fn) 
