@@ -19,10 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\server2.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\conslog.h" />
+    <ClInclude Include="src\server2.h" />
     <ClInclude Include="src\server.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
