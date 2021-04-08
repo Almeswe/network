@@ -1,68 +1,95 @@
+#pragma once
+#include "conslog.h"
+
+#include <vector>
+#include <thread>
+#include <string>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <iostream>
-#include <string>
 
-#include <iomanip>
-#include <ctime>
-#include <chrono>
+#define SendFromServerTo(client, msg)		   this->SendDataTo(client, msg, "SERVER")
+#define SendFromServerToAll(except, msg)	   this->SendDataTo(this->clients, except, msg, "SERVER")
+#define SendFromClientToAll(except, msg, from) this->SendDataTo(this->clients, except, msg, from)
 
-#pragma warning(disable : 4996)
-
-#define TCP_DATA_PACK 512 
-#define DEFAULT_ANSI_PORT "27015" 
-
-using namespace std;
+#define DisconnectAllClients for(ConnectedClient* client : this->clients) this->DisconnectClient(client)
 
 namespace Network
 {
+	#define Ok   0
+	#define Fail 1
+	#define TcpPackSize 512
+
+	#define Seprtr		  Console::Informator::Print(Separator, false);
+	#define Empty	      Console::Informator::Empty();
+	#define Printc(msg)   Console::Informator::Print(msg)
+	#define Log(msg,inf)  Console::Informator::Log(msg, inf)
+	#define Infolog(msg)  Console::Informator::InfoLog(msg)
+	#define Errorlog(msg) Console::Informator::ErrorLog(msg)
+	#define Success		  Infolog("Success.")
+
+	#define Panic(msg) Network::ReportError(msg,true)
+	#define Error(msg) Network::ReportError(msg,false)
+
+	int ListenSocket(SOCKET socket, int backlog);
+	int BindSocket(SOCKET socket, sockaddr* addr, int addrSize);
+	SOCKET CreateSocket(int af, int type, int protocol);
+
+	bool IsEmptyMessage(const char* buffer);
+
+	void ReportError(std::string msg, bool panic);
+	void CreateAddressHints(int af, int port, std::string ip, sockaddr_in* addr);
+
+	class ConnectedClient
+	{
+		public:
+			int	bufSize;
+			int	addrSize;
+
+			char host[NI_MAXHOST];
+			char service[NI_MAXSERV];
+			char buffer[TcpPackSize];
+
+			SOCKET		socket;
+			sockaddr_in addr;
+	};
 	class Server
 	{
-	private:
-		int port;
-		string address;
+		private:
+			int	port;
+			int	serverAddrSize;
 
-		WSADATA wsadata;
+			WSADATA		wsa;
+			SOCKET		serverSocket;
+			sockaddr_in serverAddr;
 
-		SOCKET serverSocket;
-		SOCKET clientSocket;
+			std::string					  ip;
+			//std::vector<std::thread>	  activeThreads;
+			std::vector<ConnectedClient*> clients;
 
-		sockaddr socketAddr;
-		sockaddr_in service;
+		public:
+			Server(int port, std::string ip);
+		private:
+			~Server();
 
-		addrinfo addresHints;
-	    addrinfo* addressResult = NULL;
+		public:
+			void Run();
+			void Stop();
 
-		int serviceLen;
-		int receiveLen;
-		char buffer[TCP_DATA_PACK];
+		private:
+			int DisconnectClient(ConnectedClient* client);
+			ConnectedClient* GetClientWithSocket(SOCKET socket);
+			int AcceptClient(SOCKET serverSocket, ConnectedClient* client);
 
-	public:
-		Server();
-		~Server();
+		private:
+			int Init();
+			void StartListening();
 
-	public:
-		void Start();
-		void Close();
-
-	private:
-		void Bind();
-		void Listen();
-		int SendDataTo();
-		int ReceiveData();
-		void ProcessData();
-
-	private:
-		inline void ErrorLog(string msg, string fn) 
-		{
-			this->InfoLog("ERROR in func " + fn + " MSG: " +  msg);
-			WSACleanup();
-		}
-		inline void InfoLog(string msg)
-		{
-			time_t const now = time(0);
-			tm* gmtm = gmtime(&now);
-			printf("[%d.%d %d:%d:%d] %s\n", gmtm->tm_mday, gmtm->tm_mon, gmtm->tm_hour, gmtm->tm_min, gmtm->tm_sec, msg.c_str());
-		}
+			int ReceiveData(ConnectedClient* client);
+			int ProcessData(ConnectedClient* client);
+			void ExchangeDataWith(ConnectedClient* client);
+			int SendDataTo(ConnectedClient* client, std::string buffer, std::string from);
+			int SendDataTo(ConnectedClient* client, const char* buffer, const char* from);
+			int SendDataTo(std::vector<ConnectedClient*> clients, ConnectedClient* exceptTo, const char* buffer, const char* from);
+			int SendDataTo(std::vector<ConnectedClient*> clients, ConnectedClient* exceptTo, std::string buffer, std::string from);
 	};
 }
