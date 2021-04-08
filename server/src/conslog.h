@@ -4,11 +4,20 @@
 #include <string>
 #include <iostream>
 
+#define Separator "===================================================================="
+
 namespace Console
 {
 	class Informator
 	{
 		public:
+			static void Print(std::string msg, bool date = true)
+			{
+				tm* now = CreateTimeNow();
+				std::string datestr = date ? ("[" + GetTimeString(*now) + "]") : "";
+				std::cout << datestr 
+					      << msg << std::endl;
+			}
 			static void Log(std::string msg, std::string informator)
 			{
 				tm* now = CreateTimeNow();
