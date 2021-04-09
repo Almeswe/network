@@ -19,14 +19,6 @@ namespace Network
 	#define Fail 1
 	#define TcpPackSize 512
 
-	#define Seprtr		  Console::Informator::Print(Separator, false);
-	#define Empty	      Console::Informator::Empty();
-	#define Printc(msg)   Console::Informator::Print(msg)
-	#define Log(msg,inf)  Console::Informator::Log(msg, inf)
-	#define Infolog(msg)  Console::Informator::InfoLog(msg)
-	#define Errorlog(msg) Console::Informator::ErrorLog(msg)
-	#define Success		  Infolog("Success.")
-
 	#define Panic(msg) Network::ReportError(msg,true)
 	#define Error(msg) Network::ReportError(msg,false)
 

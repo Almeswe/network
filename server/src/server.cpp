@@ -7,7 +7,7 @@ namespace Network
 		int res = listen(socket, backlog);
 		if (res == SOCKET_ERROR)
 			Panic("Can't set a socket as listening socket...");
-		Infolog("Socket setted as listening socket successfully.");
+		InfoLogc("Socket setted as listening socket successfully.");
 		return Ok;
 	}
 	int BindSocket(SOCKET socket, sockaddr* addr, int addrSize)
@@ -15,7 +15,7 @@ namespace Network
 		int res = bind(socket, addr, addrSize);
 		if (res)
 			Panic("Can't bind a socket.");
-		Infolog("Binding a socket finished successfully.");
+		InfoLogc("Binding a socket finished successfully.");
 		return Ok;
 	}
 	SOCKET CreateSocket(int af, int type, int protocol)
@@ -23,7 +23,7 @@ namespace Network
 		SOCKET sckt = socket(af, type, protocol);
 		if (sckt == INVALID_SOCKET)
 			Panic("Can't create a socket...");
-		Infolog("Socket created successfully.");
+		InfoLogc("Socket created successfully.");
 		return sckt;
 	}
 
@@ -37,10 +37,10 @@ namespace Network
 
 	void ReportError(std::string msg, bool panic)
 	{
-		Errorlog(msg);
+		ErrorLogc(msg);
 		if (panic)
 		{
-			Errorlog("Error above is unexpected. Press any key to quit...");
+			ErrorLogc("Error above is unexpected. Press any key to quit...");
 			std::cin.get();
 			exit(0);
 		}
@@ -54,10 +54,10 @@ namespace Network
 
 	Server::Server(int port, std::string ip) : port(port),ip(ip)
 	{
-		Infolog("Initializing a server...");
+		InfoLogc("Initializing a server...");
 		if (this->Init())
 			Panic("Initializing is failed.");
-		Infolog("Initialization finished successfully.");
+		InfoLogc("Initialization finished successfully.");
 		Seprtr;
 	}
 	Server::~Server()
@@ -108,7 +108,7 @@ namespace Network
 			ZeroMemory(client->host, NI_MAXHOST);
 			ZeroMemory(client->service, NI_MAXSERV);
 			if (!getnameinfo((sockaddr*)&client->addr, client->addrSize, client->host, NI_MAXHOST, client->service, NI_MAXSERV, 0))
-				Log("Client " + std::string(client->host) + " as " + std::to_string(client->socket) + " connected.", "CONNECTION");
+				Logc("Client " + std::string(client->host) + " as " + std::to_string(client->socket) + " connected.", "CONNECTION");
 			SendFromServerTo(client, "You've entered the chatroom as: " + std::to_string(client->socket) + "\r\n");
 			if (this->clients.size() > 0)
 			{
@@ -140,9 +140,9 @@ namespace Network
 	void Server::StartListening()
 	{
 		ListenSocket(this->serverSocket, SOMAXCONN);
-		Empty;
-		Infolog("Waiting for connections...");
-		Empty;
+		Emptyc;
+		InfoLogc("Waiting for connections...");
+		Emptyc;
 		while(true)
 		{
 			ConnectedClient* client = new ConnectedClient();
@@ -151,7 +151,7 @@ namespace Network
 			std::thread(&Server::ExchangeDataWith, this, client).detach();
 		}
 	}
-	
+
 	int Server::ReceiveData(ConnectedClient* client)
 	{
 		ZeroMemory(client->buffer, TcpPackSize);
@@ -161,7 +161,7 @@ namespace Network
 	int Server::ProcessData(ConnectedClient* client)
 	{
 		if (client->bufSize > 0 && !IsEmptyMessage(client->buffer))
-			Log(std::string(client->buffer), std::to_string(client->socket));
+			Logc(std::string(client->buffer), std::to_string(client->socket));
 		return Ok;
 	}
 	void Server::ExchangeDataWith(ConnectedClient* client)
@@ -174,10 +174,10 @@ namespace Network
 			SendFromClientToAll(client, client->buffer, std::to_string(client->socket).c_str());
 		} while (client->bufSize > 0);
 		if (this->DisconnectClient(client))
-			Errorlog("Client " + std::to_string(client->socket) + " already disconnected.");
+			ErrorLogc("Client " + std::to_string(client->socket) + " already disconnected.");
 		else
 		{
-			Log("Client " + std::to_string(client->socket) + " disconnected.", "DISCONNECTION");
+			Logc("Client " + std::to_string(client->socket) + " disconnected.", "DISCONNECTION");
 			SendFromServerToAll(client, "Client " + std::to_string(client->socket) + " disconnected.");
 		}
 	}
@@ -192,7 +192,7 @@ namespace Network
 		std::string message = std::string(from) + ": " + std::string(buffer) + "\r\n";
 		if (send(client->socket, message.c_str(), message.size(), 0) == SOCKET_ERROR)
 		{
-			Errorlog("Can't send message to " + std::to_string(client->socket));
+			ErrorLogc("Can't send message to " + std::to_string(client->socket));
 			return Fail;
 		}
 		else

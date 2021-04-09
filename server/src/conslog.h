@@ -4,7 +4,14 @@
 #include <string>
 #include <iostream>
 
-#define Separator "===================================================================="
+#define Seprtr		   Console::Informator::Print(Separator, false);
+#define Emptyc	       Console::Informator::Empty();
+#define Printc(msg)    Console::Informator::Print(msg)
+#define Logc(msg,inf)  Console::Informator::Log(msg, inf)
+#define InfoLogc(msg)  Console::Informator::InfoLog(msg)
+#define ErrorLogc(msg) Console::Informator::ErrorLog(msg)
+#define Success		   InfoLogc("Success.")
+#define Separator	   "===================================================================="
 
 namespace Console
 {

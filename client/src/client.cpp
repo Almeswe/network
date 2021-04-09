@@ -12,10 +12,10 @@ namespace Network
 
 	Client::Client()
 	{
-		Infolog("Initializing a client...");
+		InfoLogc("Initializing a client...");
 		if (this->Init())
 			Panic("Initializing is failed.");
-		Infolog("Initialization finished successfully.");
+		InfoLogc("Initialization finished successfully.");
 		Seprtr;
 	}
 
@@ -30,10 +30,10 @@ namespace Network
 		this->clientSocket = CreateSocket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if (this->clientSocket == INVALID_SOCKET)
 			Panic("Client socket creation failed.");
-		Infolog("Connecting to server (port:" + std::to_string(port) + ", ip:" + ip + ") ...");
+		InfoLogc("Connecting to server (port:" + std::to_string(port) + ", ip:" + ip + ") ...");
 		if (connect(this->clientSocket, (sockaddr*)&this->clientAddr, this->clientAddrSize))
 			Panic("Connecting is failed.");
-		Infolog("Connected successfully.");
+		InfoLogc("Connected successfully.");
 		this->ExchangeData();
 	}
 
@@ -41,6 +41,7 @@ namespace Network
 	{
 		do
 		{
+			//this->SendDataTo();
 			if (this->ReceiveData())
 				break;
 			this->ProcessData();
