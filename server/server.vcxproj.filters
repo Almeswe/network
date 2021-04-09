@@ -9,18 +9,12 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\server.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\server.cpp" />
-    <ClCompile Include="src\server2.cpp" />
+    <ClCompile Include="src\server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\server.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\server.h" />
-    <ClInclude Include="src\server2.h" />
     <ClInclude Include="src\conslog.h" />
+    <ClInclude Include="src\server.h" />
   </ItemGroup>
 </Project>
