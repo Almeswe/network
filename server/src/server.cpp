@@ -40,7 +40,7 @@ namespace Network
 		ErrorLogc(msg);
 		if (panic)
 		{
-			ErrorLogc("Error above is unexpected. Press any key to quit...");
+			ErrorLogc("Error above is critical or unexpected. Press any key to quit...");
 			std::cin.get();
 			exit(0);
 		}
@@ -189,7 +189,7 @@ namespace Network
 	{
 		if (IsEmptyMessage(buffer))
 			return Ok;
-		std::string message = std::string(from) + ": " + std::string(buffer) + "\r\n";
+		std::string message = std::string(from) + ": " + std::string(buffer);
 		if (send(client->socket, message.c_str(), message.size(), 0) == SOCKET_ERROR)
 		{
 			ErrorLogc("Can't send message to " + std::to_string(client->socket));

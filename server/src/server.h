@@ -7,6 +7,13 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#define Ok   0
+#define Fail 1
+#define TcpPackSize 512
+
+#define Panic(msg) Network::ReportError(msg,true)
+#define Error(msg) Network::ReportError(msg,false)
+
 #define SendFromServerTo(client, msg)		   this->SendDataTo(client, msg, "SERVER")
 #define SendFromServerToAll(except, msg)	   this->SendDataTo(this->clients, except, msg, "SERVER")
 #define SendFromClientToAll(except, msg, from) this->SendDataTo(this->clients, except, msg, from)
@@ -15,13 +22,6 @@
 
 namespace Network
 {
-	#define Ok   0
-	#define Fail 1
-	#define TcpPackSize 512
-
-	#define Panic(msg) Network::ReportError(msg,true)
-	#define Error(msg) Network::ReportError(msg,false)
-
 	int ListenSocket(SOCKET socket, int backlog);
 	int BindSocket(SOCKET socket, sockaddr* addr, int addrSize);
 	SOCKET CreateSocket(int af, int type, int protocol);
@@ -55,7 +55,6 @@ namespace Network
 			sockaddr_in serverAddr;
 
 			std::string					  ip;
-			//std::vector<std::thread>	  activeThreads;
 			std::vector<ConnectedClient*> clients;
 
 		public:
@@ -75,10 +74,10 @@ namespace Network
 		private:
 			int Init();
 			void StartListening();
+			void ExchangeDataWith(ConnectedClient* client);
 
 			int ReceiveData(ConnectedClient* client);
 			int ProcessData(ConnectedClient* client);
-			void ExchangeDataWith(ConnectedClient* client);
 			int SendDataTo(ConnectedClient* client, std::string buffer, std::string from);
 			int SendDataTo(ConnectedClient* client, const char* buffer, const char* from);
 			int SendDataTo(std::vector<ConnectedClient*> clients, ConnectedClient* exceptTo, const char* buffer, const char* from);
