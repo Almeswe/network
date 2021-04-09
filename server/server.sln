@@ -9,24 +9,30 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "..\client\client.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Debug|x64.ActiveCfg = Debug|x64
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Debug|x64.Build.0 = Debug|x64
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Debug|x86.ActiveCfg = Debug|Win32
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Debug|x86.Build.0 = Debug|Win32
+		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Release|Any CPU.ActiveCfg = Release|Win32
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Release|x64.ActiveCfg = Release|x64
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Release|x64.Build.0 = Release|x64
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Release|x86.ActiveCfg = Release|Win32
 		{2C4A6C94-D9F9-41CE-AC5E-28FB0F5A9A06}.Release|x86.Build.0 = Release|Win32
+		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Debug|x64.ActiveCfg = Debug|x64
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Debug|x64.Build.0 = Debug|x64
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Debug|x86.ActiveCfg = Debug|Win32
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Debug|x86.Build.0 = Debug|Win32
+		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Release|Any CPU.ActiveCfg = Release|Win32
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Release|x64.ActiveCfg = Release|x64
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Release|x64.Build.0 = Release|x64
 		{17F8A611-0C1D-4C24-83D1-29E1B384DAD8}.Release|x86.ActiveCfg = Release|Win32
