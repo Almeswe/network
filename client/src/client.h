@@ -10,8 +10,8 @@ namespace Network
 	class Client
 	{
 		private:
+			int bufSize;
 			int port = EmptyPort;
-			int receivedLen;
 			int clientAddrSize;
 
 			WSADATA wsa;
@@ -21,14 +21,12 @@ namespace Network
 
 			char buffer[TcpPackSize];
 			std::string ip = EmptyIP;
-			//char host[]
-			//char service
 
 		public:
 			Client();
 			~Client();
 
-		public:
+		private:
 			int Init();
 
 		public:

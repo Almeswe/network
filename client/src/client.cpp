@@ -3,13 +3,6 @@
 
 namespace Network
 {
-	int Client::Init()
-	{
-		if (WSAStartup(MAKEWORD(2, 2), &this->wsa))
-			return Fail;
-		return Ok;
-	}
-
 	Client::Client()
 	{
 		InfoLogc("Initializing a client...");
@@ -17,6 +10,17 @@ namespace Network
 			Panic("Initializing is failed.");
 		InfoLogc("Initialization finished successfully.");
 		Seprtr;
+	}
+	Client::~Client()
+	{
+		this->Disconnect();
+	}
+	
+	int Client::Init()
+	{
+		if (WSAStartup(MAKEWORD(2, 2), &this->wsa))
+			return Fail;
+		return Ok;
 	}
 
 	void Client::Connect(int port, std::string ip)
@@ -36,59 +40,51 @@ namespace Network
 		InfoLogc("Connected successfully.");
 		this->ExchangeData();
 	}
-
-	void Client::ExchangeData()
+	void Client::Disconnect()
 	{
-		do
-		{
-			//this->SendDataTo();
-			if (this->ReceiveData())
-				break;
-			this->ProcessData();
-		}
-		while (this->receivedLen > 0);
-		this->Disconnect();
+		closesocket(this->clientSocket);
+		WSACleanup();
+		Panic("You've been disconnected from server...");
 	}
-	
+
+	int Client::ReceiveData()
+	{
+		ZeroMemory(this->buffer, TcpPackSize);
+		this->bufSize = recv(this->clientSocket, this->buffer, TcpPackSize, 0);
+		return this->bufSize;
+	}
 	int Client::SendDataTo()
 	{
 		std::string msg;
-		printf("Enter message: ");
-		std::getline(std::cin, msg);
-		if (send(this->clientSocket, msg.c_str(), msg.size(), 0) == SOCKET_ERROR)
+		while (true)
 		{
-			Panic("Sending data failed.");
-			return 1;
+			std::getline(std::cin, msg);
+			if (send(this->clientSocket, msg.c_str(), msg.size(), 0) == SOCKET_ERROR)
+				Panic("Sending data failed.");
 		}
-		return 0;
+		return Ok;
 	}
-	
-	int Client::ReceiveData()
-	{
-		if ((this->receivedLen = recv(this->clientSocket, this->buffer, TcpPackSize, 0)) == SOCKET_ERROR)
-		{
-			Panic("Error when receiving data.");
-			return 1;
-		}
-		return 0;
-	}
-	
 	int Client::ProcessData()
 	{
-		if (this->receivedLen > 0 && !IsEmptyMessage(this->buffer))
+		if (this->bufSize > 0 && !IsEmptyMessage(this->buffer))
 		{
 			std::string received = " ";
-			for (size_t i = 0; i < this->receivedLen; i++)
+			for (size_t i = 0; i < this->bufSize; i++)
 				received += this->buffer[i];
 			Printc(received);
 		}
 		return Ok;
 	}
-	
-	void Client::Disconnect()
+	void Client::ExchangeData()
 	{
-		closesocket(this->clientSocket);
-		//??
-		WSACleanup();
+		std::thread(&Client::SendDataTo, this).detach();
+		do
+		{
+			if (this->ReceiveData() < 0)
+				break;
+			this->ProcessData();
+		} 
+		while (this->bufSize > 0);
+		this->Disconnect();
 	}
 }
